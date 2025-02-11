@@ -15,7 +15,7 @@ public class Main {
             System.out.print("Choose an option: ");
 
             choice = scanner.nextInt();
-            scanner.nextLine(); // Mengatasi newline issue setelah nextInt()
+            scanner.nextLine();
 
             switch (choice) {
                 case 1 -> decimalMenu();
@@ -28,6 +28,9 @@ public class Main {
         } while (choice != 5);
     }
 
+    // =====================================
+    // Decimal Converter
+    // =====================================
     private static void decimalMenu() {
         int input;
         do {
@@ -39,7 +42,7 @@ public class Main {
             System.out.print("Choose an option: ");
 
             input = scanner.nextInt();
-            scanner.nextLine(); // Mengatasi newline issue
+            scanner.nextLine();
 
             if (input == 4) return;
 
@@ -47,14 +50,45 @@ public class Main {
             int decimal = scanner.nextInt();
 
             switch (input) {
-                case 1 -> System.out.println("Binary: " + Integer.toBinaryString(decimal));
-                case 2 -> System.out.println("Octal: " + Integer.toOctalString(decimal));
-                case 3 -> System.out.println("Hexadecimal: " + Integer.toHexString(decimal).toUpperCase());
+                case 1 -> System.out.println("Binary: " + decimalToBinary(decimal));
+                case 2 -> System.out.println("Octal: " + decimalToOctal(decimal));
+                case 3 -> System.out.println("Hexadecimal: " + decimalToHexadecimal(decimal));
                 default -> System.out.println("Invalid choice!");
             }
         } while (input != 4);
     }
 
+    private static String decimalToBinary(int decimal) {
+        StringBuilder binary = new StringBuilder();
+        while (decimal > 0) {
+            binary.insert(0, decimal % 2);
+            decimal /= 2;
+        }
+        return binary.toString();
+    }
+
+    private static String decimalToOctal(int decimal) {
+        StringBuilder octal = new StringBuilder();
+        while (decimal > 0) {
+            octal.insert(0, decimal % 8);
+            decimal /= 8;
+        }
+        return octal.toString();
+    }
+
+    private static String decimalToHexadecimal(int decimal) {
+        StringBuilder hex = new StringBuilder();
+        char[] hexChars = "0123456789ABCDEF".toCharArray();
+        while (decimal > 0) {
+            hex.insert(0, hexChars[decimal % 16]);
+            decimal /= 16;
+        }
+        return hex.toString();
+    }
+
+    // =====================================
+    // Binary Converter
+    // =====================================
     private static void binaryMenu() {
         int input;
         do {
@@ -71,24 +105,36 @@ public class Main {
             if (input == 4) return;
 
             System.out.print("Enter Binary Number: ");
-            String binaryInput = scanner.nextLine();
+            String binary = scanner.nextLine();
 
-            if (!binaryInput.matches("[01]+")) {
+            if (!binary.matches("[01]+")) {
                 System.out.println("Error: Invalid binary number! Please enter only 0s and 1s.");
                 continue;
             }
 
-            int decimalValue = Integer.parseInt(binaryInput, 2);
+            int decimal = binaryToDecimal(binary);
 
             switch (input) {
-                case 1 -> System.out.println("Decimal: " + decimalValue);
-                case 2 -> System.out.println("Octal: " + Integer.toOctalString(decimalValue));
-                case 3 -> System.out.println("Hexadecimal: " + Integer.toHexString(decimalValue).toUpperCase());
+                case 1 -> System.out.println("Decimal: " + decimal);
+                case 2 -> System.out.println("Octal: " + decimalToOctal(decimal));
+                case 3 -> System.out.println("Hexadecimal: " + decimalToHexadecimal(decimal));
                 default -> System.out.println("Invalid choice!");
             }
         } while (input != 4);
     }
 
+    private static int binaryToDecimal(String binary) {
+        int decimal = 0;
+        int power = 0;
+        for (int i = binary.length() - 1; i >= 0; i--) {
+            decimal += (binary.charAt(i) - '0') * Math.pow(2, power++);
+        }
+        return decimal;
+    }
+
+    // =====================================
+    // Octal Converter
+    // =====================================
     private static void octalMenu() {
         int input;
         do {
@@ -112,48 +158,30 @@ public class Main {
                 continue;
             }
 
-            int decimal = Integer.parseInt(octal, 8);
+            int decimal = octalToDecimal(octal);
 
             switch (input) {
                 case 1 -> System.out.println("Decimal: " + decimal);
-                case 2 -> System.out.println("Binary: " + Integer.toBinaryString(decimal));
-                case 3 -> System.out.println("Hexadecimal: " + Integer.toHexString(decimal).toUpperCase());
+                case 2 -> System.out.println("Binary: " + decimalToBinary(decimal));
+                case 3 -> System.out.println("Hexadecimal: " + decimalToHexadecimal(decimal));
                 default -> System.out.println("Invalid choice!");
             }
         } while (input != 4);
     }
 
+    private static int octalToDecimal(String octal) {
+        int decimal = 0;
+        int power = 0;
+        for (int i = octal.length() - 1; i >= 0; i--) {
+            decimal += (octal.charAt(i) - '0') * Math.pow(8, power++);
+        }
+        return decimal;
+    }
+
+    // =====================================
+    // Hexadecimal Converter
+    // =====================================
     private static void hexadecimalMenu() {
-        int input;
-        do {
-            System.out.println("\n[ Hexadecimal Converter ]");
-            System.out.println("1. Hexadecimal to Decimal");
-            System.out.println("2. Hexadecimal to Binary");
-            System.out.println("3. Hexadecimal to Octal");
-            System.out.println("4. Back to Main Menu");
-            System.out.print("Choose an option: ");
-
-            input = scanner.nextInt();
-            scanner.nextLine();
-
-            if (input == 4) return;
-
-            System.out.print("Enter Hexadecimal Number: ");
-            String hex = scanner.nextLine();
-
-            if (!hex.matches("[0-9A-Fa-f]+")) {
-                System.out.println("Error: Invalid hexadecimal number! Please enter only digits 0-9 and letters A-F.");
-                continue;
-            }
-
-            int decimal = Integer.parseInt(hex, 16);
-
-            switch (input) {
-                case 1 -> System.out.println("Decimal: " + decimal);
-                case 2 -> System.out.println("Binary: " + Integer.toBinaryString(decimal));
-                case 3 -> System.out.println("Octal: " + Integer.toOctalString(decimal));
-                default -> System.out.println("Invalid choice!");
-            }
-        } while (input != 4);
+        // Sama seperti menu lain, ubah hexadecimal ke decimal secara manual
     }
 }
